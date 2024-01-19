@@ -22,11 +22,11 @@ function FeedbackForm() {
     }
   }, [feedbackEdit]);
 
-  const handleTextChange = (e) => {
-    if (text === "") {
+  const handleTextChange = ({ target: { value } }) => {
+    if (value === "") {
       setMessage(null);
       setBtnDisabled(true);
-    } else if (text !== "" && text.trim().length <= 10) {
+    } else if (value !== "" && value.trim().length <= 10) {
       setMessage("Review must be atlease 10 characters long");
       setBtnDisabled(true);
     } else {
@@ -34,7 +34,7 @@ function FeedbackForm() {
       setBtnDisabled(false);
     }
 
-    setText(e.target.value);
+    setText(value);
   };
 
   const handleSubmit = (e) => {
@@ -51,6 +51,8 @@ function FeedbackForm() {
         addFeedback(newFeedback);
       }
 
+      setBtnDisabled(true);
+      setRating(10);
       setText("");
     }
   };
@@ -60,7 +62,7 @@ function FeedbackForm() {
       <form onSubmit={handleSubmit}>
         <h2>How would you rate your service with us?</h2>
         {/* @todo - rating select component */}
-        <RatingSelect select={(rating) => setRating(rating)} />
+        <RatingSelect select={setRating} selected={rating} />
         <div className="input-group">
           <input
             onChange={handleTextChange}

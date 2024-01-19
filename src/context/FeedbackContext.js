@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import FeedbackData from "../data/FeedbackData";
@@ -6,11 +6,17 @@ import FeedbackData from "../data/FeedbackData";
 const FeedbackContext = createContext();
 
 export const FeedbackProvider = ({ children }) => {
-  const [feedback, setFeedback] = useState(FeedbackData);
+  const [isLoading, setIsLoading] = useState(true);
+  const [feedback, setFeedback] = useState([]);
   const [feedbackEdit, setFeedbackEdit] = useState({
     item: {},
     edit: false,
   });
+
+  useEffect(() => {
+    setFeedback(FeedbackData);
+    setIsLoading(false);
+  }, []);
 
   //add feedback
   const addFeedback = (newFeedback) => {
@@ -38,6 +44,11 @@ export const FeedbackProvider = ({ children }) => {
     setFeedback(
       feedback.map((item) => (item.id === id ? { ...item, ...updItem } : item))
     );
+
+    setFeedbackEdit({
+      item: {},
+      edit: false,
+    });
   };
 
   return (
@@ -45,6 +56,7 @@ export const FeedbackProvider = ({ children }) => {
       value={{
         feedback,
         feedbackEdit,
+        isLoading,
         addFeedback,
         deleteFeedback,
         editFeedback,
